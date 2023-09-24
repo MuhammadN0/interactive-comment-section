@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection } from 'firebase/firestore';
+import { getFirestore } from 'firebase/firestore';
 const firebaseConfig = {
   apiKey: 'AIzaSyDmdEILfE3U5DNB015s30Fji7vj6894WkQ',
   authDomain: 'comments-section-582c1.firebaseapp.com',
@@ -9,5 +9,4 @@ const firebaseConfig = {
   appId: '1:632087094943:web:b20dce8218e73e014ba4aa',
 };
 export const app = initializeApp(firebaseConfig);
-
 export const db = getFirestore(app);

@@ -13,7 +13,7 @@ const StyledComment = styled.div`
   display: flex;
   gap: 1rem;
   width: 100%;
-  @media(max-width: 800px){
+  @media (max-width: 800px) {
     flex-direction: column-reverse;
     position: relative;
   }
@@ -47,7 +47,7 @@ export const Button = styled.button`
   gap: 0.3rem;
   align-items: center;
   cursor: pointer;
-  @media(max-width:800px){
+  @media (max-width: 800px) {
     position: absolute;
     right: 21px;
     bottom: 28px;
@@ -65,7 +65,7 @@ export const ButtonGroup = styled.div`
     bottom: 28px;
   }
   & > button {
-    @media (max-width: 800px){
+    @media (max-width: 800px) {
       position: static;
     }
   }
@@ -98,8 +98,17 @@ export const You = styled.span`
 
 function Comment({ comment }) {
   const { user } = useUser();
-  const { setReplyingId, setIsReplying, formRef, setIsEditing, setEditingId, setIsOpenModal, setModalOnClick } = useProject();
-  const {id:commentId, isLikedByYou, isDislikedByYou} = comment 
+  const {
+    setReplyingId,
+    setIsReplying,
+    formRef,
+    setIsEditing,
+    setEditingId,
+    setIsOpenModal,
+    setModalOnClick,
+    isEditing,
+  } = useProject();
+  const { id: commentId, isLikedByYou, isDislikedByYou } = comment;
   const timestampMilliseconds = isNaN(
     comment?.createdAt?.seconds * 1000 + comment?.createdAt?.nanoseconds / 1e6
   )
@@ -108,11 +117,17 @@ function Comment({ comment }) {
       comment?.createdAt?.nanoseconds / 1e6;
   const date = new Date(timestampMilliseconds);
   const dateDiff = differenceInDays(new Date(), date);
-  
+
   return (
     <>
       <StyledComment>
-        <CommentSide commentId={commentId} isComment={true} score={comment.score} isLikedByYou={isLikedByYou} isDislikedByYou={isDislikedByYou} />
+        <CommentSide
+          commentId={commentId}
+          isComment={true}
+          score={comment.score}
+          isLikedByYou={isLikedByYou}
+          isDislikedByYou={isDislikedByYou}
+        />
         <Row>
           <StyledCommentHeader>
             <Info>
@@ -142,11 +157,18 @@ function Comment({ comment }) {
             </Info>
             {comment.user.username === user.username ? (
               <ButtonGroup>
-                <Button className="edit" onClick={()=>{
-                  setEditingId({...comment, isComment:true})
-                  setIsEditing(true)
-                  formRef.current.focus()
-                }}>
+                <Button
+                  className="edit"
+                  onClick={() => {
+                    if (setIsReplying) {
+                      setIsReplying(false);
+                      setReplyingId({});
+                    }
+                    setEditingId({ ...comment, isComment: true });
+                    setIsEditing(true);
+                    formRef.current.focus();
+                  }}
+                >
                   <span>
                     <img src="./images/icon-edit.svg" alt="edit-icon" />
                   </span>
@@ -155,9 +177,9 @@ function Comment({ comment }) {
                 <Button
                   className="delete"
                   onClick={() => {
-                    setIsOpenModal(true)
-                    setModalOnClick({commentId})
-                    }}
+                    setIsOpenModal(true);
+                    setModalOnClick({ commentId });
+                  }}
                 >
                   <span>
                     <img src="./images/icon-delete.svg" alt="delete-icon" />
@@ -168,6 +190,10 @@ function Comment({ comment }) {
             ) : (
               <Button
                 onClick={() => {
+                  if (isEditing) {
+                    setIsEditing(false);
+                    setEditingId({});
+                  }
                   setReplyingId(comment);
                   setIsReplying(true);
                   formRef.current.focus();

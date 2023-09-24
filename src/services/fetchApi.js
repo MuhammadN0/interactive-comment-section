@@ -1,8 +1,18 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, updateDoc } from "firebase/firestore";
-import { db } from "./firebase";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  updateDoc,
+} from 'firebase/firestore';
+import { db } from './firebase';
 const commentsRefCollection = collection(db, 'comments');
 const currentUserRefCollection = doc(db, 'currentUser', 'oWf9IHhL6empYaNdTqyP');
-const q = query(commentsRefCollection, orderBy('createdAt', 'asc'))
+const q = query(commentsRefCollection, orderBy('createdAt', 'asc'));
 export async function getComments() {
   try {
     const commentSnapshot = await getDocs(q);
@@ -28,10 +38,10 @@ export async function getComments() {
   }
 }
 
-export async function fetchCurrentUser(){
-  try{
-    const currentUserSnapshot = await getDoc(currentUserRefCollection)
-    return {...currentUserSnapshot.data()}
+export async function fetchCurrentUser() {
+  try {
+    const currentUserSnapshot = await getDoc(currentUserRefCollection);
+    return { ...currentUserSnapshot.data() };
   } catch (error) {
     console.error(error.message);
     throw new Error(error.message);
@@ -50,12 +60,12 @@ export async function fetchCurrentUser() {
 }*/
 
 //Create a new Comment
-export async function postComment(comment){
-  try{
-    addDoc(commentsRefCollection, comment)
+export async function postComment(comment) {
+  try {
+    addDoc(commentsRefCollection, comment);
   } catch (error) {
     console.error(error.message);
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 }
 /*
@@ -76,13 +86,13 @@ export async function postComment(comment) {
   }
 }*/
 
-export async function deleteComment(commentId){
-  try{
-    const commentDoc = doc(db,'comments', commentId)
-    deleteDoc(commentDoc)
-  }catch (error) {
+export async function deleteComment(commentId) {
+  try {
+    const commentDoc = doc(db, 'comments', commentId);
+    deleteDoc(commentDoc);
+  } catch (error) {
     console.error(error.message);
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 }
 /*
@@ -96,43 +106,42 @@ export async function deleteComment(commentId) {
     throw new Error(err.message);
   }
 }*/
-export async function deleteReply({commentId, replyId}) {
-  try{
-    const replyDoc = doc(db,`comments/${commentId}/replies`, replyId)
-    deleteDoc(replyDoc)
-  }catch (error) {
-    console.error(error.message);
-    throw new Error(error.message)
-  }
-}
-
-
-export async function createReplyOnComment({commentId, reply}){
-  try{
-    const replyRefCollection = collection(db, `comments/${commentId}/replies`)
-    addDoc(replyRefCollection, reply)
+export async function deleteReply({ commentId, replyId }) {
+  try {
+    const replyDoc = doc(db, `comments/${commentId}/replies`, replyId);
+    deleteDoc(replyDoc);
   } catch (error) {
     console.error(error.message);
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 }
 
-export async function updateComment({commentId, updatingData}) {
-  try{
-    const commentDoc = doc(db,'comments', commentId)
-    updateDoc(commentDoc, updatingData)
-  }catch (error) {
+export async function createReplyOnComment({ commentId, reply }) {
+  try {
+    const replyRefCollection = collection(db, `comments/${commentId}/replies`);
+    addDoc(replyRefCollection, reply);
+  } catch (error) {
     console.error(error.message);
-    throw new Error(error.message)
+    throw new Error(error.message);
   }
 }
 
-export async function updateReply({commentId,replyId, updatingData}) {
-  try{
-    const replyDoc = doc(db,`comments/${commentId}/replies`, replyId)
-    updateDoc(replyDoc, updatingData)
-  }catch (error) {
+export async function updateComment({ commentId, updatingData }) {
+  try {
+    const commentDoc = doc(db, 'comments', commentId);
+    updateDoc(commentDoc, updatingData);
+  } catch (error) {
     console.error(error.message);
-    throw new Error(error.message)
+    throw new Error(error.message);
+  }
+}
+
+export async function updateReply({ commentId, replyId, updatingData }) {
+  try {
+    const replyDoc = doc(db, `comments/${commentId}/replies`, replyId);
+    updateDoc(replyDoc, updatingData);
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
   }
 }

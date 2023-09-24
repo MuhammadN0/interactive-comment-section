@@ -49,6 +49,8 @@ function Reply({ reply, commentId }) {
     setEditingId,
     setIsOpenModal,
     setModalOnClick,
+    isReplying,
+    isEditing,
   } = useProject();
   const { id: replyId, isLikedByYou, isDislikedByYou } = reply;
   const timestampMilliseconds = isNaN(
@@ -101,6 +103,10 @@ function Reply({ reply, commentId }) {
               <Button
                 className="edit"
                 onClick={() => {
+                  if (isReplying) {
+                    setIsReplying(false);
+                    setReplyingId({});
+                  }
                   setEditingId({ ...reply, commentId, isComment: false });
                   setIsEditing(true);
                   formRef.current.focus();
@@ -127,6 +133,10 @@ function Reply({ reply, commentId }) {
           ) : (
             <Button
               onClick={() => {
+                if (isEditing) {
+                  setIsEditing(false);
+                  setEditingId({});
+                }
                 setReplyingId({ ...reply, id: commentId });
                 setIsReplying(true);
                 formRef.current.focus();
