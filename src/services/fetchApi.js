@@ -27,6 +27,7 @@ export async function getComments() {
     throw new Error(error.message);
   }
 }
+
 export async function fetchCurrentUser(){
   try{
     const currentUserSnapshot = await getDoc(currentUserRefCollection)
@@ -125,6 +126,7 @@ export async function updateComment({commentId, updatingData}) {
     throw new Error(error.message)
   }
 }
+
 export async function updateReply({commentId,replyId, updatingData}) {
   try{
     const replyDoc = doc(db,`comments/${commentId}/replies`, replyId)
